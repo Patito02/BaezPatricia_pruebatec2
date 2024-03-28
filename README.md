@@ -62,13 +62,15 @@ Permite visualizar los datos de los ciudadanos registrados: nombre, apellido y d
 Se deben ingresar los datos del ciudadano: nombre, apellido y dni, todos los datos son obligatorios. El botón “Registrar Ciudadano” crea el ciudadano. El botón “Cancelar” lleva al listado de ciudadanos.
 
 ## Explicación de métodos
--	Ver Turnos
+
+#### Ver Turnos
 Esta sección utiliza el servlet SvTurno - método GET. Lo que se hace es traer el listado completo de turnos a través del método traerTurnos(). Este método trae un listado de todos los turnos registrados y habilitados existentes en el sistema, los ordena por fecha ascendente y los muestra en verTurnos.jsp; si no hay turnos muestra un cartel y redirige a SvInicio para ver la pantalla principal.
 Las opciones de filtrado de los turnos son: por fecha o por fecha y estado. Para este filtrado se utiliza el servlet SvBusquedaFecha – método GET. Se toman los datos de filtrado elegidos, se busca por fecha con el método buscarPorFecha() para traer la lista de turnos habilitados de ese fecha. En el caso de que no haya turnos le avisa al usuario con un cartel. Si el filtro es solo por fecha, muestra el listado por fecha. Si el filtro incluye la fecha y el estado, se utiliza adicionalmente el método buscarPorEstado() para filtrar por el estado seleccionado y mostrar la lista, si no hay turnos con el estado seleccionado le avisa al usuario con otro cartel. En todos los casos, luego del filtrado redirige a la pantalla verTurnos.jsp.
 El botón Ver Todos muestra todos los turnos por pantalla utilizando el servlet SvTurno – método GET y se queda en la pantalla verTurnos.jsp
 Para editar un turno se utiliza el servlet SvModifTurno - método GET. Se utiliza el método traerTurno() para buscar los datos del turno seleccionado y mostarlos en la pantalla editarTurno.jsp, en el caso que el turno tenga estado Ya atendido, muestra un cartel de aviso ya que no se podría editar y redirige a SvTurno para ver el listado de turnos. Cuando se presiona el botón Modificar Turno llama al servlet SvModifTurno - método POST. Lo que se hace es setear los datos modificados y llamar al método editarTurno() para guardar los cambios, en el caso que el turno tenga estado Ya atendido, muestra un cartel de aviso.  En ambos casos redirige a SvTurno para ver la lista completa de turnos con los cambios realizados.
 Para cancelar un turno se utiliza el servlet SvElimTurno- método POST. Se utiliza el método traerTurno() para buscar los datos del turno seleccionado, en el caso que el turno tenga estado Ya atendido, muestra un cartel de aviso ya que no se podría cancelar. Si el turno se puede cancelar pregunta si está seguro de realizar la cancelación del turno, si la respuesta es SI se procede a la cancelación del turno a través del método eliminarTurno(), si la respuesta es NO se queda en la misma página. El método eliminarTurno() cambia el atributo Habilitado a false. En todos los casos redirige a SvTurno para visualizar el listado completo de turnos con los cambios realizados.
--	Nuevo Turno
+
+#### Nuevo Turno
 Esta sección muestra en la pantalla solicitarTurno.jsp los campos a completar para la solicitud de un nuevo turno, todos los campos son obligatorios. Al presionar el botón Guardar Turno, se procede al registro del mismo, para lo cual se utiliza el servlet SvTurno - método POST. Lo que se hace es tomar los datos de pantalla y verificar si existe el ciudadano ingresado mediante el método buscarPorDni(). Este método verifica si existe el ciudadano en la base de datos, si existe retorna el ciudadano, si no existe pregunta si desea crearlo y si confirma, redirige a la pantalla de registrarCiudadano.jsp. Seguidamente si el ciudadano existe, se procede a la creación del turno con el método crearTurno() y por último se agrega a la lista del ciudadano el turno registrado. Una vez finalizado se muestra un cartel y redirige a la pantalla solicitarTurno.jsp.
 Cada turno tendrá un Estado y un Trámite asignado, éstos son:
 Estado: 
@@ -80,19 +82,22 @@ Tramites:
 3=” Atención Tesorería”, 
 4=” Reclamos”.
 
--	Ver Turnos Pendientes 
+#### Ver Turnos Pendientes 
 Esta sección utiliza el servlet SvTurnosPendientes - método GET. Lo que se hace es traer el listado completo de turnos a través del método traerTurnos(). Este método trae un listado de todos los turnos registrados y habilitados en el sistema y los ordena por fecha ascendente para luego mostrarlos en la pantalla turnosPendientes.jsp; si no hay turnos pendientes muestra un aviso y redirige a SvInicio para ver la pantalla principal. Si hay turnos, realiza el filtro por estado con el método buscarPorEstado().
 Está la opción de filtrar por fecha. Para este filtrado se utiliza el servlet SvBusquedaFecha – método POST. Se toman el dato de fecha elegida y se busca con el método buscarPorFecha(). En el caso de que no haya turnos le avisa al usuario con un cartel. Luego filtra por estado “En espera” con el método buscarPorEstado() y muestra el listado por pantalla. Al finalizar redirige a la pantalla turnosPendientes.jsp.
 El botón Ver Todos muestra todos los turnos por pantalla utilizando el servlet SvTurnosPendientes – método GET y se queda en la pantalla turnosPendientes.jsp.
 El botón Atender utiliza el servlet SvTurnosPendientes – método POST. Se busca por el id del turno seleccionado a través del método traerTurno(). Le pregunta al usuario si está seguro de querer atender ese turno, si la respuesta es SI, cambia el estado del turno a “Ya atendido”, con el método editarTurno(). Luego redirige al SvTurnosPendientes para mostrar por pantalla los turnos pendientes en turnosPendientes.jsp.
--	Atender Próximo Turno
+
+#### Atender Próximo Turno
 Esta sección utiliza el servlet SvProximoTurno- método GET. Lo que se hace es traer los datos completos del próximo turno. Esto los hace con el método buscarPorFecha() utilizando la fecha de hoy y luego filtrando por estado con buscarPorEstado(). De esa lista buscar el primero turno y lo muestra por pantalla en proximoTurno.jsp. En el caso de que no haya turnos pendientes para hoy, muestra un cartel al usuario y redirige a la pantalla principal con SvInicio.    
 El botón Atender utiliza el servlet SvTurnosPendientes – método POST. Se busca por el id del turno seleccionado a través del método traerTurno(). Le pregunta al usuario si está seguro de querer atender ese turno, si la respuesta es SI, cambia el estado del turno a “Ya atendido”, con el método editarTurno(). Luego redirige al SvTurnosPendientes para mostrar por pantalla los turnos pendientes en turnosPendientes.jsp.
--	Ver ciudadanos
+
+#### Ver ciudadanos
 Esta sección utiliza el servlet SvCiudadano - método GET. Lo que se hace es traer la lista completa de ciudadanos con el método traerCiudadanos() y los muestra por pantalla en verCiudadanos.jsp. En el caso de que no haya ciudadanos registrados muestra un aviso al usuario y redirige a la pantalla principal a través de SvInicio.
 En el botón Modificar utiliza el servlet SvModifCiudadano - método GET. Se utiliza el método traerCiudadano() para encontrar el ciudadano del id que se seleccionó. Una vez que encuentra el ciudadano redirige los resultados y los muestra en la pantalla editarCiudadano.jsp. El botón Modificar Ciudadano utiliza el servlet SvModifCiudadano – método POST. Se toman los datos de pantalla y se setean esos datos y con el método editarCiudadano() se guardan en la base de datos las modificaciones. Al finalizar se redirige a SvCiudadano para ver la lista de ciudadanos.
 Para botón Eliminar utiliza el servlet SvElimCiudadano - método POST. Se utiliza el método traerCiudadano () para buscar los datos del ciudadano seleccionado. Luego de verificar que no tenga turnos pendientes con los métodos traerTurnos() y buscarPorEstado(), pregunta si está seguro de realizar la eliminación del ciudadano, si la respuesta es SI se procede a la eliminación del ciudadano a través del método eliminarCiudadano(), si la respuesta es NO se queda en la misma página. El método eliminarCiudadano () cambia el atributo Habilitado a false. En todos los casos redirige a SvCiudadano para visualizar el listado completo de ciudadanos habilitados.
--	Registrar Ciudadanos
+
+#### Registrar Ciudadanos
 Esta opción lleva a la pantalla registrarCiudadano.jsp, donde se podrán ingresar los datos de un ciudadano. Al hacer clic en el botón Registrar Ciudadano se invoca al servlet SvCiudadano – método POST. Aquí se toman los datos de pantalla y se verifica si ya existe con el método buscarPorDni(). Luego si no existe en la base de datos se procede a la creación del ciudadano mediante el método crearCiudadano(). Tanto para el caso de si existe el ciudadano o si se crea el ciudadano se le informa al usuario con un cartel y redirige a la pantalla registrarCiudadano.jsp.
 
 ### Desarrolladores y creadores
